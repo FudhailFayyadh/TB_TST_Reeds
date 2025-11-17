@@ -72,7 +72,7 @@ async def get_profile(
     )
 
 
-@router.post("/{user_id}/genre", response_model=Dict[str, str])
+@router.post("/{user_id}/genre")
 async def add_genre(
     user_id: str,
     request: AddGenreRequest,
@@ -119,7 +119,7 @@ async def add_rating(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/{user_id}/block", response_model=Dict[str, str])
+@router.post("/{user_id}/block")
 async def block_item(
     user_id: str,
     request: BlockItemRequest,
