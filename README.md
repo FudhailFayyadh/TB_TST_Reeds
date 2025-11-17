@@ -390,8 +390,3 @@ Course: II3160 - Teknologi Sistem Terintegrasi (ITB)
 **Institution:** Institut Teknologi Bandung (ITB)  
 **Milestone:** 4 – Implementasi Awal
 
----
-
-## 📄 License
-
-This project is created for academic purposes as part of the II3160 course at ITB.
