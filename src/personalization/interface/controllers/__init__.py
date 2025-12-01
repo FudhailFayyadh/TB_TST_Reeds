@@ -1,4 +1,5 @@
 # controllers
-from .profile_controller import router
+from . import profile_controller
+from . import auth_controller
 
-__all__ = ['router']
+__all__ = ['profile_controller', 'auth_controller']

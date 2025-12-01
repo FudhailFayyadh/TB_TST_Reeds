@@ -1,7 +1,7 @@
-# BC-3 Personalization Context - Milestone 4
+# BC-3 Personalization Context - Milestone 5
 
 **Course:** II3160 – Teknologi Sistem Terintegrasi (ITB)  
-**Milestone:** 4 – Implementasi Awal  
+**Milestone:** 5 – Implementasi Lanjutan (JWT Authentication)  
 **Bounded Context:** Personalization (Core Domain)  
 **Student:** 18223121
 
@@ -10,6 +10,12 @@
 ## 🎯 Overview
 
 This project implements the **Personalization Context** for a book recommendation system following **Domain-Driven Design (DDD)** principles. The system manages user reading preferences, reading history, and content filtering.
+
+### Milestone 5 Updates 🔐
+- ✅ **JWT-based Authentication** - Secure token-based authentication
+- ✅ **User Registration & Login** - OAuth2 compatible endpoints
+- ✅ **Protected API Endpoints** - All profile endpoints require authentication
+- ✅ **Authorization** - Users can only access their own profiles
 
 ### Core Features
 - ✅ User profile management with reading preferences
@@ -33,7 +39,7 @@ This project implements the **Personalization Context** for a book recommendatio
 ```
 ┌─────────────────────────────────────────┐
 │     Interface Layer (REST API)          │
-│        FastAPI Controllers              │
+│   FastAPI Controllers + JWT Auth        │
 ├─────────────────────────────────────────┤
 │   Application Layer (Orchestration)     │
 │     Services, DTOs, Use Cases           │
@@ -43,7 +49,7 @@ This project implements the **Personalization Context** for a book recommendatio
 │        Domain Events, Invariants        │
 ├─────────────────────────────────────────┤
 │  Infrastructure Layer (Technical)       │
-│   Repository Pattern, In-Memory DB      │
+│   Repository, In-Memory DB, JWT Auth    │
 └─────────────────────────────────────────┘
 ```
 
@@ -91,25 +97,104 @@ This project implements the **Personalization Context** for a book recommendatio
 
 ---
 
-## 📡 API Endpoints
+## 🔐 Authentication (Milestone 5)
+
+### Demo Credentials
+```
+Username: demo_user
+Password: demo123
+User ID: user_001
+```
+
+### Authentication Flow
+
+1. **Login to get JWT token:**
+```http
+POST /auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=demo_user&password=demo123
+```
+
+Response:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIs...",
+  "token_type": "bearer"
+}
+```
+
+2. **Use token in requests:**
+```http
+GET /profile/user_001
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+```
+
+### Auth Endpoints
+
+#### Register User
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "username": "new_user",
+  "password": "password123"
+}
+```
+
+#### Login (OAuth2)
+```http
+POST /auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=demo_user&password=demo123
+```
+
+#### Login (JSON)
+```http
+POST /auth/token
+Content-Type: application/json
+
+{
+  "username": "demo_user",
+  "password": "demo123"
+}
+```
+
+#### Get Current User
+```http
+GET /auth/me
+Authorization: Bearer <token>
+```
+
+---
+
+## 📡 API Endpoints (Protected)
 
 ### Profile Management
+
+> ⚠️ **All profile endpoints require JWT authentication**
+> Include `Authorization: Bearer <token>` header in all requests
 
 #### Create Profile
 ```http
 POST /profile/{user_id}
+Authorization: Bearer <token>
 ```
-Creates a new user profile.
+Creates a new user profile. Users can only create their own profile.
 
 #### Get Profile
 ```http
 GET /profile/{user_id}
+Authorization: Bearer <token>
 ```
-Retrieves user profile details.
+Retrieves user profile details. Users can only view their own profile.
 
 #### Get Snapshot (Read Model)
 ```http
 GET /profile/{user_id}/snapshot
+Authorization: Bearer <token>
 ```
 Retrieves optimized profile snapshot with statistics.
 
@@ -118,6 +203,7 @@ Retrieves optimized profile snapshot with statistics.
 #### Add Favorite Genre
 ```http
 POST /profile/{user_id}/genre
+Authorization: Bearer <token>
 Content-Type: application/json
 
 {
@@ -131,6 +217,7 @@ Max 5 genres allowed per user.
 #### Add/Update Rating
 ```http
 POST /profile/{user_id}/rating
+Authorization: Bearer <token>
 Content-Type: application/json
 
 {
@@ -145,6 +232,7 @@ Rating must be between 1-5.
 #### Block Book
 ```http
 POST /profile/{user_id}/block
+Authorization: Bearer <token>
 Content-Type: application/json
 
 {

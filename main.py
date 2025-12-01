@@ -1,10 +1,10 @@
 """
 FastAPI Application - BC-3 Personalization Context
-Milestone 4: Implementasi Awal
+Milestone 5: Implementasi Lanjutan - JWT Authentication
 II3160 – Teknologi Sistem Terintegrasi (ITB)
 
 This application implements the Personalization bounded context
-following Domain-Driven Design (DDD) principles.
+following Domain-Driven Design (DDD) principles with JWT authentication.
 """
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
@@ -12,12 +12,37 @@ from fastapi.responses import RedirectResponse
 from src.personalization.infrastructure.in_memory import InMemoryProfilMinatBacaRepository
 from src.personalization.application.services import ProfilService
 from src.personalization.interface.controllers import profile_controller
+from src.personalization.interface.controllers import auth_controller
 
 # Initialize FastAPI application
 app = FastAPI(
     title="BC-3 Personalization Context API",
-    description="Domain-Driven Design implementation for Reading Interest Profile Management",
-    version="1.0.0",
+    description="""
+## Domain-Driven Design Implementation for Reading Interest Profile Management
+
+### Milestone 5: JWT Authentication
+
+This API implements the Personalization bounded context with secure JWT authentication.
+
+### Authentication
+All profile endpoints require JWT authentication. To access protected endpoints:
+
+1. **Register** a new user at `/auth/register` or use demo credentials
+2. **Login** at `/auth/login` to get JWT token
+3. Use the token in Authorization header: `Bearer <token>`
+
+### Demo Credentials
+- Username: `demo_user`
+- Password: `demo123`
+- User ID: `user_001`
+
+### Features
+- ✅ JWT-based Authentication
+- ✅ User Registration & Login
+- ✅ Protected Profile Management
+- ✅ Domain-Driven Design Architecture
+    """,
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -32,7 +57,8 @@ profil_service = ProfilService(repository)
 profile_controller.set_profil_service(profil_service)
 
 # Register routes
-app.include_router(profile_controller.router)
+app.include_router(auth_controller.router)  # Authentication routes
+app.include_router(profile_controller.router)  # Profile routes (protected)
 
 
 @app.get("/", include_in_schema=False)
@@ -47,7 +73,8 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "BC-3 Personalization Context",
-        "version": "1.0.0"
+        "version": "2.0.0",
+        "features": ["JWT Authentication", "DDD Architecture", "Profile Management"]
     }
 
 
