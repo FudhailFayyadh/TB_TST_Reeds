@@ -5,10 +5,10 @@ from .rating_dto import AddRatingRequest
 from .block_dto import BlockItemRequest
 
 __all__ = [
-    'CreateProfileRequest',
-    'ProfileResponse',
-    'SnapshotResponse',
-    'AddGenreRequest',
-    'AddRatingRequest',
-    'BlockItemRequest'
+    "CreateProfileRequest",
+    "ProfileResponse",
+    "SnapshotResponse",
+    "AddGenreRequest",
+    "AddRatingRequest",
+    "BlockItemRequest",
 ]

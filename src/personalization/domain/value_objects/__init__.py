@@ -5,10 +5,4 @@ from .rating import Rating
 from .daftar_blokir import DaftarBlokir
 from .preferensi_eksplisit import PreferensiEksplisit
 
-__all__ = [
-    'UserId',
-    'GenreFavorit',
-    'Rating',
-    'DaftarBlokir',
-    'PreferensiEksplisit'
-]
+__all__ = ["UserId", "GenreFavorit", "Rating", "DaftarBlokir", "PreferensiEksplisit"]
