@@ -4,4 +4,13 @@ pydantic==2.5.0
 python-jose[cryptography]==3.3.0
 bcrypt==4.0.1
 python-multipart==0.0.6
-request s==2.31.0
+requests==2.31.0
+
+# Testing - PENTING: gunakan httpx versi 0.27.0 untuk kompatibilitas dengan starlette
+pytest==8.3.5
+pytest-cov==6.1.1
+pytest-asyncio==0.24.0
+httpx==0.27.0
+
+# Linting
+ruff==0.11.10

@@ -1,3 +1,4 @@
+
 """PreferensiEksplisit Value Object"""
 from dataclasses import dataclass
 from typing import List

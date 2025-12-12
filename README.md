@@ -1,7 +1,13 @@
-# BC-3 Personalization Context - Milestone 5
+# 📚 BC-3 Personalization Context API
+
+[![CI Pipeline](https://github.com/FudhailFayyadh/TB_TST_Reeds/actions/workflows/ci.yml/badge.svg)](https://github.com/FudhailFayyadh/TB_TST_Reeds/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 **Course:** II3160 – Teknologi Sistem Terintegrasi (ITB)  
-**Milestone:** 5 – Implementasi Lanjutan (JWT Authentication)  
+**Milestone:** 6 – Testing & CI/CD  
 **Bounded Context:** Personalization (Core Domain)  
 **Student:** 18223121
 
@@ -10,6 +16,12 @@
 ## 🎯 Overview
 
 This project implements the **Personalization Context** for a book recommendation system following **Domain-Driven Design (DDD)** principles. The system manages user reading preferences, reading history, and content filtering.
+
+### Milestone 6 Updates 🧪
+- ✅ **TDD with 98% Test Coverage** - 214 comprehensive unit, integration, and API tests
+- ✅ **GitHub Actions CI/CD** - Automated testing, linting, and security checks
+- ✅ **pytest + pytest-cov** - Test framework with coverage reporting
+- ✅ **ruff Linting** - Code quality and style enforcement
 
 ### Milestone 5 Updates 🔐
 - ✅ **JWT-based Authentication** - Secure token-based authentication
@@ -292,7 +304,10 @@ curl -X GET "http://localhost:8000/profile/user-001/snapshot"
 ## 📁 Project Structure
 
 ```
-c:\Akademik\TB_TST_Reeds\
+TB_TST_Reeds/
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # GitHub Actions CI/CD
 ├── src/
 │   └── personalization/
 │       ├── domain/
@@ -321,19 +336,27 @@ c:\Akademik\TB_TST_Reeds\
 │       │       ├── rating_dto.py
 │       │       └── block_dto.py
 │       ├── infrastructure/
+│       │   ├── auth/
+│       │   │   ├── jwt_handler.py
+│       │   │   ├── dependencies.py
+│       │   │   └── models.py
 │       │   ├── repositories/
 │       │   │   └── profil_repository.py
 │       │   └── in_memory/
 │       │       └── in_memory_profil_repository.py
 │       └── interface/
 │           └── controllers/
+│               ├── auth_controller.py
 │               └── profile_controller.py
+├── tests/
+│   ├── conftest.py
+│   ├── unit/                    # 165 tests
+│   ├── api/                     # 25 tests
+│   └── security/                # 24 tests
 ├── main.py
 ├── requirements.txt
-├── test_api.py
-├── .gitignore
-├── MILESTONE_4_EXPLANATION.md
-└── README.md (this file)
+├── pytest.ini
+└── README.md
 ```
 
 ---
@@ -418,18 +441,160 @@ POST /profile/user-001/block {"book_id": "book-123"}
 
 ---
 
-## 🚧 Future Enhancements (Next Milestones)
+## 🧪 Testing (Milestone 6)
 
+### Test Coverage: 98% ✅
+
+The project uses **Test-Driven Development (TDD)** with comprehensive test coverage across all layers.
+
+### Test Statistics
+| Metric | Value |
+|--------|-------|
+| **Total Tests** | 214 |
+| **Coverage** | 98.14% |
+| **Unit Tests** | 165 (97.52% coverage) |
+| **API Tests** | 25 |
+| **Security Tests** | 24 |
+
+### Test Structure
+```
+tests/
+├── conftest.py                    # Shared fixtures
+├── unit/
+│   ├── test_value_objects.py      # Rating, GenreFavorit, UserId (28 tests)
+│   ├── test_blocklist_preferences.py  # DaftarBlokir, PreferensiEksplisit (21 tests)
+│   ├── test_aggregate.py          # ProfilMinatBaca, RiwayatBaca (29 tests)
+│   ├── test_service.py            # ProfilService with mocks (17 tests)
+│   ├── test_jwt_handler.py        # JWT token & password hashing (20 tests)
+│   ├── test_repository.py         # InMemory repository (14 tests)
+│   ├── test_dependencies.py       # Auth dependencies (9 tests)
+│   └── test_controllers.py        # Controller endpoints (27 tests)
+├── api/
+│   └── test_endpoints.py          # Full API workflow tests (25 tests)
+└── security/
+    └── test_auth.py               # JWT security vulnerability tests (24 tests)
+```
+
+### Running Tests
+
+```bash
+# Run all tests with coverage
+pytest
+
+# Run with verbose output
+pytest -v --cov=src --cov-report=term-missing
+
+# Run specific test categories
+pytest tests/unit/ -v          # Unit tests only (165 tests)
+pytest tests/api/ -v           # API tests only (25 tests)
+pytest tests/security/ -v      # Security tests only (24 tests)
+
+# Generate HTML coverage report
+pytest --cov=src --cov-report=html
+# Open htmlcov/index.html in browser
+```
+
+### CI/CD Pipeline
+
+The project includes **GitHub Actions** for continuous integration:
+
+| Job | Description | Status |
+|-----|-------------|--------|
+| **lint** | Code quality checks with ruff | ✅ |
+| **test** | Run pytest with 95% coverage threshold | ✅ |
+| **security** | Dependency vulnerability checks | ✅ |
+
+Workflow file: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+
+```yaml
+# Triggers on:
+# - Push to main/develop branches
+# - Pull requests to main
+```
+
+### Test Categories
+
+| Category | Tests | Coverage Focus |
+|----------|-------|----------------|
+| **Value Objects** | 49 | Immutability, validation, equality |
+| **Aggregates** | 29 | Business invariants, domain events |
+| **Services** | 17 | Application logic with mocks |
+| **Controllers** | 27 | HTTP endpoints, auth |
+| **API Integration** | 25 | Full HTTP workflow |
+| **Security** | 24 | JWT vulnerabilities, token attacks |
+| **Infrastructure** | 43 | Repository, JWT handler, dependencies |
+
+---
+
+## 🚀 Deployment
+
+### Option 1: Local Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run with hot-reload
+uvicorn main:app --reload --port 8000
+```
+
+### Option 2: Railway
+
+1. Connect GitHub repo to [Railway](https://railway.app)
+2. Set environment variables:
+   ```
+   PORT=8000
+   SECRET_KEY=your-super-secret-key-here
+   ```
+3. Deploy automatically on push
+
+### Option 3: Docker
+
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+```bash
+docker build -t tst-reeds .
+docker run -p 8000:8000 tst-reeds
+```
+
+---
+
+## 🚧 Future Enhancements
+
+- [x] ~~Authentication & authorization~~ ✅ Milestone 5
+- [x] ~~Unit and integration tests~~ ✅ Milestone 6
+- [x] ~~CI/CD pipeline~~ ✅ Milestone 6
 - [ ] Database persistence (PostgreSQL/MongoDB)
+- [ ] Docker containerization
+- [ ] Deploy to Railway/Vercel
 - [ ] Event handlers and event sourcing
 - [ ] Integration with other bounded contexts
 - [ ] Recommendation algorithm implementation
-- [ ] Authentication & authorization
-- [ ] Unit and integration tests
-- [ ] Docker containerization
-- [ ] CI/CD pipeline
 - [ ] API rate limiting & caching
 - [ ] Monitoring and logging
+
+---
+
+## 📚 Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| **Framework** | FastAPI 0.104.1 |
+| **Language** | Python 3.12 |
+| **Authentication** | JWT (python-jose) |
+| **Password Hashing** | passlib + bcrypt |
+| **Testing** | pytest, pytest-cov, pytest-asyncio |
+| **Linting** | ruff |
+| **HTTP Client** | httpx 0.27.0 |
+| **CI/CD** | GitHub Actions |
 
 ---
 
@@ -442,32 +607,34 @@ POST /profile/user-001/block {"book_id": "book-123"}
 
 ---
 
-## 📝 Git Commit Message
+## 📝 Commit History Highlights
 
 ```
-feat: Implement BC-3 Personalization Context for Milestone 4
+feat: Implement Milestone 6 - TDD Testing & CI/CD
 
-- Add complete DDD folder structure
-- Implement ProfilMinatBaca aggregate with all invariants
-- Add value objects: UserId, GenreFavorit, Rating, DaftarBlokir, PreferensiEksplisit
-- Add RiwayatBaca entity
-- Add domain events: RatingDiberikan, GenreFavoritDiubah, ItemDiblokir
-- Implement SnapshotProfil read model (CQRS)
-- Add repository pattern with in-memory implementation
-- Add ProfilService application service
-- Add REST API endpoints with FastAPI
-- Add Pydantic DTOs for type safety
-- Add API documentation and health check endpoint
+Testing:
+- Add comprehensive test suite with 214 tests
+- Achieve 98% code coverage (target: 95%)
+- Unit tests for value objects, aggregates, entities
+- Integration tests for services with mocks
+- API endpoint tests with authentication
+- Security tests for JWT vulnerabilities
 
-Business invariants enforced:
-- Maximum 5 favorite genres
-- Rating must be between 1-5
-- Unique reading history per (userId, bookId)
-- Cannot block active books
+CI/CD:
+- Add GitHub Actions workflow (.github/workflows/ci.yml)
+- Lint job with ruff
+- Test job with pytest and coverage threshold
+- Security job for dependency checks
 
-Milestone: 4 - Implementasi Awal
+Milestone: 6 - Testing & CI/CD
 Course: II3160 - Teknologi Sistem Terintegrasi (ITB)
 ```
+
+---
+
+## 📄 License
+
+MIT License - Feel free to use for educational purposes.
 
 ---
 
@@ -476,5 +643,5 @@ Course: II3160 - Teknologi Sistem Terintegrasi (ITB)
 **Student ID:** 18223121  
 **Course:** II3160 – Teknologi Sistem Terintegrasi  
 **Institution:** Institut Teknologi Bandung (ITB)  
-**Milestone:** 4 – Implementasi Awal
+**Milestone:** 6 – Testing & CI/CD
 
